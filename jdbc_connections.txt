@@ -1,0 +1,94 @@
+##################jdbc static way connections##############
+package jdbc_connection;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class jdbc {
+	
+	/**
+	 * @param 
+	 */
+	public static void main(String[] args) {
+		try {
+			//step1:-load the driver 	
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			//step2:-Create a connection
+			Connection conn=DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/siva", "root", "Siva@2003");
+			String sql="update data set name='mani' where name='sai'";
+			//step3:-statement creation
+			PreparedStatement pmst=conn.prepareStatement(sql);
+			//step4:-statement execution
+			int i= pmst.executeUpdate();
+			if (i>0) {
+				System.out.println("table Created Successfully");
+			}
+			else {
+				System.out.println("Error");
+			}
+			//step5:-closing
+			conn.close();
+			pmst.close();
+			}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+}
+
+
+#####################jdbc dynamic way connections################
+package practice_jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.util.Scanner;
+
+public class jdbc_dynamic {
+	private static String driver = "com.mysql.cj.jdbc.Driver";
+	private static String url  = "jdbc:mysql://127.0.0.1:3306/mani";
+	private static String username = "root";
+	private static String password= "Siva@2003";
+	private static Connection conn;
+	private static PreparedStatement prepar;
+	
+	public static void main(String[] args) {
+		try {
+			Scanner sc = new Scanner(System.in);
+			// Load the drive
+			Class.forName(driver);
+			//create connection
+			conn = DriverManager.getConnection(url , username, password);
+			String sql_query=("insert into harika(id, name, salary, email) values (?,?,?,?)");
+			//create statement
+			prepar=conn.prepareStatement(sql_query);
+			System.out.println("Enter your employe id");
+			prepar.setInt(1, sc.nextInt());
+			System.out.println("Enter your name");
+			prepar.setString(2, sc.next());
+			System.out.println("Enter your salary");
+			prepar.setInt(3, sc.nextInt());
+			System.out.println("Enter your email address");
+			prepar.setString(4, sc.next());
+			//execution of statement
+			int i = prepar.executeUpdate();
+			if(i>0) {
+				System.out.println("Inserted successfully");
+			}
+			else {
+				System.out.println("Error for inserted");
+			}
+			//close
+			conn.close();
+			prepar.close();
+			sc.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}
